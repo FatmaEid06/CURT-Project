@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Roboto Mono", monospace;
+  --font-body: "Roboto Mono", monospace;
+
+  --text-huge: 80rem;
+  --text-huge--line-height: 1;
+
+  --height-screen: 100dvh;
+}
