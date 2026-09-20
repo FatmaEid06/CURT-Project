@@ -2,6 +2,7 @@ import { useSearchParams } from "react-router-dom";
 import TaskTableOperations from "../features/tasks/TaskTableOperations";
 import Heading from "../ui/Heading";
 import Row from "../ui/Row";
+import AddTask from "../features/tasks/AddTask";
 
 const title = {
   all: "All tasks",
@@ -16,10 +17,15 @@ function Tasks() {
 
   const heading = title[currentTitle] || "All tasks";
   return (
-    <Row type="horizontal">
-      <Heading as="h1">{heading}</Heading>
-      <TaskTableOperations />
-    </Row>
+    <>
+      <Row type="horizontal">
+        <Heading as="h1">{heading}</Heading>
+        <TaskTableOperations />
+      </Row>
+      <Row>
+        <AddTask />
+      </Row>
+    </>
   );
 }
 

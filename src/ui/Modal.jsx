@@ -8,7 +8,7 @@ const ModalContext = createContext();
 function Modal({ children }) {
   const [openName, setOpenName] = useState("");
   const close = () => setOpenName("");
-  const open = openName;
+  const open = setOpenName;
 
   return (
     <ModalContext.Provider value={{ openName, close, open }}>

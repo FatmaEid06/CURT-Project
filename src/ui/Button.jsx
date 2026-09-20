@@ -17,7 +17,7 @@ function Button({
 
   const variationStyles = {
     primary:
-      "text-[var(--color-brand-50)] bg-[var(--color-brand-600)] hover:bg-[var(--color-brand-700)] border-none",
+      "text-[var(--color-brand-50)] bg-[var(--color-brand-600)] hover:bg-blue-400 hover:text-[var(--color-grey-900)] border-none",
     secondary:
       "text-[var(--color-grey-600)] bg-[var(--color-grey-0)] border border-[var(--color-grey-200)] hover:bg-[var(--color-grey-50)]",
     danger:
