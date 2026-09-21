@@ -2,7 +2,7 @@ import Modal from "../../ui/Modal";
 import Button from "../../ui/Button";
 import CreateProjectForm from "./CreateProjectForm";
 
-function AddProject() {
+function AddProject({ onUpdate }) {
   return (
     <div>
       <Modal>
@@ -11,7 +11,7 @@ function AddProject() {
         </Modal.Open>
 
         <Modal.Window name="project-form">
-          <CreateProjectForm />
+          <CreateProjectForm onCloseModal={() => onUpdate?.()} />
         </Modal.Window>
       </Modal>
     </div>
