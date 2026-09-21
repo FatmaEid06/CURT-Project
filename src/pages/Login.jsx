@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { getStorageData, setStorageData } from "../data/helpers";
 import Button from "../ui/Button";
 import Heading from "../ui/Heading";
+import SpinnerMini from "../ui/SpinnerMini";
 
 function Login() {
   const [name, setName] = useState("");
@@ -10,16 +11,19 @@ function Login() {
   const [password, setPassword] = useState("");
   const [isSignup, setIsSignup] = useState(false);
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   function handleSubmit(e) {
     e.preventDefault();
+    setIsLoading(true);
 
     const users = getStorageData("users", []);
 
     if (isSignup) {
       if (!name.trim() || !email.trim() || !password.trim()) {
         setError("All fields are required");
+        setIsLoading(false);
         return;
       }
 
@@ -29,6 +33,7 @@ function Login() {
 
       if (existingEmail) {
         setError("Email is already taken");
+        setIsLoading(false);
         return;
       }
       const newUser = {
@@ -54,6 +59,7 @@ function Login() {
         navigate("/home", { replace: true });
       } else {
         setError("Invalid email or password");
+        setIsLoading(false);
       }
     }
   }
@@ -106,7 +112,9 @@ function Login() {
           />
         </div>
 
-        <Button size="large">{isSignup ? "Sign up" : "Log in"}</Button>
+        <Button size="large">
+          {isLoading ? <SpinnerMini /> : isSignup ? "Sign up" : "Log in"}
+        </Button>
 
         <button
           type="button"

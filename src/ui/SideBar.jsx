@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 function SideBar() {
   const navigate = useNavigate();
   function handleLogout() {
-    // localStorage.removeItem("currentUser");
+    localStorage.removeItem("currentUser");
     navigate("/login", { replace: true });
   }
   return (
