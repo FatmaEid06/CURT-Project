@@ -1,7 +1,7 @@
 import Modal from "../../ui/Modal";
 import Button from "../../ui/Button";
 import CreateTaskForm from "./CreateTaskForm";
-function AddTask() {
+function AddTask({ onUpdate }) {
   return (
     <div>
       <Modal>
@@ -10,7 +10,7 @@ function AddTask() {
         </Modal.Open>
 
         <Modal.Window name="task-form">
-          <CreateTaskForm />
+          <CreateTaskForm onUpdate={onUpdate} />
         </Modal.Window>
       </Modal>
     </div>

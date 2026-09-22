@@ -4,8 +4,9 @@ import FormRow from "../../ui/FormRow";
 import Button from "../../ui/Button";
 import Select from "../../ui/Select";
 import { getStorageData, setStorageData } from "../../data/helpers";
+import toast from "react-hot-toast";
 
-function CreateTaskForm({ onCloseModal, defaultProjectId = "" }) {
+function CreateTaskForm({ onCloseModal, defaultProjectId = "", onUpdate }) {
   const projects = getStorageData("projects", []);
   const users = getStorageData("users", []);
 
@@ -26,20 +27,26 @@ function CreateTaskForm({ onCloseModal, defaultProjectId = "" }) {
       return;
     }
 
-    const tasks = getStorageData("tasks", []);
-    const newTask = {
-      id: `t-${Date.now()}`,
-      projectId,
-      title: title.trim(),
-      description: description.trim(),
-      status,
-      priority,
-      assignedTo,
-    };
+    try {
+      const tasks = getStorageData("tasks", []);
+      const newTask = {
+        id: `t-${Date.now()}`,
+        projectId,
+        title: title.trim(),
+        description: description.trim(),
+        status,
+        priority,
+        assignedTo,
+      };
 
-    setStorageData("tasks", [...tasks, newTask]);
-
-    if (onCloseModal) onCloseModal();
+      setStorageData("tasks", [...tasks, newTask]);
+      toast.success("Task added successfully");
+      onUpdate?.();
+      if (onCloseModal) onCloseModal();
+    } catch (err) {
+      toast.error("Task can'tbe added");
+      console.log(err);
+    }
   }
 
   return (
