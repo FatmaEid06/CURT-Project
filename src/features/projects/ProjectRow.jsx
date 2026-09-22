@@ -48,17 +48,17 @@ function ProjectRow({ project, onUpdate }) {
               >
                 See details
               </Menus.Button>
-              <Modal.Open opens="edit">
+              <Modal.Open opens={`edit-${project.id}`}>
                 <Menus.Button icon={<HiPencil />}>Edit</Menus.Button>
               </Modal.Open>
-              <Modal.Open opens="delete">
+              <Modal.Open opens={`delete-${project.id}`}>
                 <Menus.Button icon={<HiTrash />}>Delete</Menus.Button>
               </Modal.Open>
             </Menus.List>
           </Menus.Menu>
         </Menus>
 
-        <Modal.Window name="delete">
+        <Modal.Window name={`delete-${project.id}`}>
           <ConfirmDelete resourceName="project" onConfirm={handleDelete} />
         </Modal.Window>
       </Modal>

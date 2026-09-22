@@ -11,7 +11,7 @@ function AddProject({ onUpdate }) {
         </Modal.Open>
 
         <Modal.Window name="project-form">
-          <CreateProjectForm onCloseModal={() => onUpdate?.()} />
+          <CreateProjectForm onUpdate={onUpdate} />
         </Modal.Window>
       </Modal>
     </div>

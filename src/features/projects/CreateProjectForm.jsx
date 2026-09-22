@@ -3,8 +3,9 @@ import Form from "../../ui/Form";
 import FormRow from "../../ui/FormRow";
 import Button from "../../ui/Button";
 import { getStorageData, setStorageData } from "../../data/helpers";
+import toast from "react-hot-toast";
 
-function CreateProjectForm({ onCloseModal, onProjectCreated }) {
+function CreateProjectForm({ onCloseModal, onUpdate }) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
@@ -19,20 +20,26 @@ function CreateProjectForm({ onCloseModal, onProjectCreated }) {
       setError("Project name is required");
       return;
     }
+    try {
+      const projects = getStorageData("projects", []);
+      const newProject = {
+        id: `p-${Date.now()}`,
+        name: name.trim(),
+        description: description.trim(),
+        ownerId: currentUser.id,
+        members: [currentUser.id],
+      };
 
-    const projects = getStorageData("projects", []);
-    const newProject = {
-      id: `p-${Date.now()}`,
-      name: name.trim(),
-      description: description.trim(),
-      ownerId: currentUser.id,
-      members: [currentUser.id],
-    };
+      setStorageData("projects", [...projects, newProject]);
+      toast.success("Project added successfully");
 
-    setStorageData("projects", [...projects, newProject]);
-
-    if (onProjectCreated) onProjectCreated(newProject);
-    if (onCloseModal) onCloseModal();
+      onUpdate?.();
+      onCloseModal?.();
+      if (onCloseModal) onCloseModal();
+    } catch (err) {
+      toast.error("Failed to dd the project");
+      console.log(err);
+    }
   }
 
   return (
