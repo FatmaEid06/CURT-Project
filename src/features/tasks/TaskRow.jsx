@@ -2,16 +2,16 @@ import toast from "react-hot-toast";
 import { getStorageData, setStorageData } from "../../data/helpers";
 import Modal from "../../ui/Modal";
 import Menus from "../../ui/Menus";
-import { HiCheckCircle, HiPencil, HiTrash } from "react-icons/hi2";
+import { HiCheckCircle, HiEye, HiPencil, HiTrash } from "react-icons/hi2";
 import { useNavigate } from "react-router-dom";
 import ConfirmDelete from "../../ui/ConfirmDelete";
 
-function TaskRow({ task, onUpdate, project, currentuser }) {
+function TaskRow({ task, onUpdate, project, currentUser }) {
   const users = getStorageData("users", []);
   const asignee = users.find((user) => user.id === task.assignedTo);
 
-  const isOwner = project?.id === currentuser?.id;
-  const isAsignee = currentuser?.id === task.assignedTo;
+  const isOwner = project?.ownerId === currentUser?.id;
+  const isAsignee = currentUser?.id === task.assignedTo;
   const canUpdateStatus = isOwner || isAsignee;
 
   const navigate = useNavigate();
@@ -53,7 +53,7 @@ function TaskRow({ task, onUpdate, project, currentuser }) {
         {task.status}
       </span>
       <span className="text-[var(--color-grey-600)] capitalize">
-        {task.proirity}
+        {task.priority}
       </span>
       <span className="text-[var(--color-grey-600)]">
         {asignee?.name || "Unassigned"}
@@ -74,7 +74,7 @@ function TaskRow({ task, onUpdate, project, currentuser }) {
               )}
 
               <Menus.Button
-                icon={<HiPencil />}
+                icon={<HiEye />}
                 onClick={() => navigate(`tasks/${task.id}`)}
               >
                 See details
@@ -89,7 +89,6 @@ function TaskRow({ task, onUpdate, project, currentuser }) {
                   </Modal.Open>
                 </>
               )}
-              <Modal.Open></Modal.Open>
             </Menus.List>
           </Menus.Menu>
         </Menus>

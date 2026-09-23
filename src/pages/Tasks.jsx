@@ -4,7 +4,7 @@ import Heading from "../ui/Heading";
 import Row from "../ui/Row";
 import AddTask from "../features/tasks/AddTask";
 import { useEffect, useState } from "react";
-import { setStorageData } from "../data/helpers";
+import { getStorageData } from "../data/helpers";
 import TaskTable from "../features/tasks/TaskTable";
 
 const title = {
@@ -29,8 +29,8 @@ function Tasks() {
   const heading = title[currentTitle] || "All tasks";
 
   function loadData() {
-    setTasks(setStorageData("tasks", []));
-    setProjects(setStorageData("projects", []));
+    setTasks(getStorageData("tasks", []));
+    setProjects(getStorageData("projects", []));
   }
   useEffect(() => {
     loadData();
