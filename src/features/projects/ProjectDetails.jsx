@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { getStorageData, setStorageData } from "../../data/helpers";
 import Button from "../../ui/Button";
 import toast from "react-hot-toast";
@@ -12,14 +12,22 @@ import Spinner from "../../ui/Spinner";
 
 function ProjectDetails() {
   const { projectId } = useParams();
+  const [searchParams] = useSearchParams();
+
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const [project, setProject] = useState(null);
   const [tasks, setTasks] = useState([]);
   const [users, setUsers] = useState([]);
 
-  const currentUser = getStorageData("currentUser", null);
+  const currentStatus = searchParams.get("status") || "all";
+  const currentPriority = searchParams.get("priority") || "all";
+  const searchQuery = (searchParams.get("search") || "").trim().toLowerCase();
 
+  const currentUser = getStorageData("currentUser", null);
+  const currentPage = !searchParams.get("page")
+    ? 1
+    : Number(searchParams.get("page"));
   function loadData() {
     const projects = getStorageData("projects", []);
     setProject(projects.find((p) => p.id === projectId) || null);
@@ -35,6 +43,17 @@ function ProjectDetails() {
     return () => clearTimeout(timer);
   }, [projectId]);
 
+  const filterTasks = tasks.filter(
+    (task) =>
+      (currentStatus === "all" || task.status === currentStatus) &&
+      (currentPriority === "all" || task.priority === currentPriority) &&
+      (!searchQuery || task.title.toLowerCase().includes(searchQuery)),
+  );
+
+  const paginatedTasks = filterTasks.slice(
+    (currentPage - 1) * 5,
+    currentPage * 5,
+  );
   if (isLoading) return <Spinner />;
 
   if (!project) {
@@ -112,10 +131,11 @@ function ProjectDetails() {
         <Heading as="h2">Tasks in this project</Heading>
         <div className="mt-[1.6rem]">
           <TaskTable
-            tasks={tasks}
+            tasks={paginatedTasks}
             projects={[project]}
             currentUser={currentUser}
             onUpdate={loadData}
+            count={filterTasks.length}
           />
         </div>
       </div>
