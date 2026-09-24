@@ -1,29 +1,31 @@
 import { useState } from "react";
+import {
+  getAssigneeIds,
+  getStorageData,
+  setStorageData,
+} from "../../data/helpers";
+import toast from "react-hot-toast";
 import Form from "../../ui/Form";
 import FormRow from "../../ui/FormRow";
-import Button from "../../ui/Button";
 import Select from "../../ui/Select";
-import { getStorageData, setStorageData } from "../../data/helpers";
-import toast from "react-hot-toast";
+import Button from "../../ui/Button";
 
-function CreateTaskForm({ onCloseModal, defaultProjectId = "", onUpdate }) {
+function EditTaskForm({ task, onCloseModal, onUpdate }) {
   const projects = getStorageData("projects", []);
   const users = getStorageData("users", []);
+  const project = projects.find((p) => p.id === task.projectId);
 
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [projectId, setProjectId] = useState(
-    defaultProjectId || (projects[0]?.id ?? ""),
+  const currentIds = getAssigneeIds(task);
+  const assigneeOptions = users.filter(
+    (u) => project?.members?.includes(u.id) || currentIds.includes(u.id),
   );
-  const [priority, setPriority] = useState("medium");
-  const [status, setStatus] = useState("to-do");
-  const [assignedTo, setAssignedTo] = useState(users[0]?.id ?? "");
+
+  const [title, setTitle] = useState(task.title);
+  const [description, setDescription] = useState(task.description || "");
+  const [priority, setPriority] = useState(task.priority);
+  const [status, setStatus] = useState(task.status);
+  const [assignedTo, setAssignedTo] = useState(task.assignedTo || "");
   const [error, setError] = useState("");
-
-  const selectedProject = projects.find((p) => p.id === projectId);
-  const assigneeOptions = users.filter((u) =>
-    selectedProject?.members?.includes(u.id),
-  );
 
   function toggleAssignee(userId) {
     setAssignedTo((cur) =>
@@ -35,55 +37,53 @@ function CreateTaskForm({ onCloseModal, defaultProjectId = "", onUpdate }) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    if (!title.trim() || !projectId) {
-      setError("Task title and project are required.");
+    if (!title.trim()) {
+      setError("Task title is required");
       return;
     }
 
     try {
       const tasks = getStorageData("tasks", []);
-      const newTask = {
-        id: `t-${Date.now()}`,
-        projectId,
-        title: title.trim(),
-        description: description.trim(),
-        status,
-        priority,
-        assignedTo,
-      };
-
-      setStorageData("tasks", [...tasks, newTask]);
-      toast.success("Task added successfully");
+      const updatedTasks = tasks.map((t) =>
+        t.id === task.id
+          ? {
+              ...t,
+              title: title.trim(),
+              description: description.trim(),
+              priority,
+              status,
+              assignedTo,
+            }
+          : t,
+      );
+      setStorageData("tasks", updatedTasks);
+      toast.success("Task updated successfully");
       onUpdate?.();
-      if (onCloseModal) onCloseModal();
+      onCloseModal?.();
     } catch (err) {
-      toast.error("Task can'tbe added");
+      toast.error("Task can't be updated");
       console.log(err);
     }
   }
 
   return (
     <Form onSubmit={handleSubmit} type="regular" className="w-[55rem]">
-      <FormRow
-        label="Task Title"
-        error={error && !title.trim() ? "Title required" : ""}
-      >
+      <FormRow label="Task Title" error={error}>
         <input
           type="text"
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => {
+            setTitle(e.target.value);
+            if (e.target.value.trim()) setError("");
+          }}
           className="border border-[var(--color-grey-300)] rounded-[var(--border-radius-sm)] p-[0.8rem_1.2rem] text-[1.4rem]"
-          placeholder="e.g. Simulate front wing flow"
         />
       </FormRow>
 
       <FormRow label="Project">
-        <Select
-          type="white"
-          value={projectId}
-          onChange={(e) => setProjectId(e.target.value)}
-          options={projects.map((p) => ({ value: p.id, label: p.name }))}
-        />
+        <span className="text-[var(--color-grey-600)]">
+          {project?.name || "Unknown"}
+        </span>
       </FormRow>
 
       <FormRow label="Description">
@@ -148,12 +148,12 @@ function CreateTaskForm({ onCloseModal, defaultProjectId = "", onUpdate }) {
         <Button variant="secondary" type="button" onClick={onCloseModal}>
           Cancel
         </Button>
-        <Button variant="primary" type="submit">
-          Save Task
+        <Button variant="primary" type="submit" disabled={!title.trim()}>
+          Save Changes
         </Button>
       </FormRow>
     </Form>
   );
 }
 
-export default CreateTaskForm;
+export default EditTaskForm;

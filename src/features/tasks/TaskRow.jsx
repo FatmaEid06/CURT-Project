@@ -1,14 +1,23 @@
 import toast from "react-hot-toast";
-import { getStorageData, setStorageData } from "../../data/helpers";
+import {
+  getAssigneeIds,
+  getStorageData,
+  setStorageData,
+} from "../../data/helpers";
 import Modal from "../../ui/Modal";
 import Menus from "../../ui/Menus";
 import { HiCheckCircle, HiEye, HiPencil, HiTrash } from "react-icons/hi2";
 import { useNavigate } from "react-router-dom";
 import ConfirmDelete from "../../ui/ConfirmDelete";
+import EditTaskForm from "./EditTaskForm";
 
 function TaskRow({ task, onUpdate, project, currentUser }) {
   const users = getStorageData("users", []);
-  const asignee = users.find((user) => user.id === task.assignedTo);
+  const assigneeIds = getAssigneeIds(task);
+  const assigneeNames = users
+    .filter((user) => assigneeIds.includes(user.id))
+    .map((user) => user.name)
+    .join(", ");
 
   const isOwner = project?.ownerId === currentUser?.id;
   const isAsignee = currentUser?.id === task.assignedTo;
@@ -56,7 +65,7 @@ function TaskRow({ task, onUpdate, project, currentUser }) {
         {task.priority}
       </span>
       <span className="text-[var(--color-grey-600)]">
-        {asignee?.name || "Unassigned"}
+        {assigneeNames || "Unassigned"}
       </span>
 
       <Modal>
@@ -81,10 +90,10 @@ function TaskRow({ task, onUpdate, project, currentUser }) {
               </Menus.Button>
               {isOwner && (
                 <>
-                  <Modal.Open opens="edit">
+                  <Modal.Open opens={`edit-${task.id}`}>
                     <Menus.Button icon={<HiPencil />}>Edit</Menus.Button>
                   </Modal.Open>
-                  <Modal.Open opens="delete">
+                  <Modal.Open opens={`delete-${task.id}`}>
                     <Menus.Button icon={<HiTrash />}>Delete</Menus.Button>
                   </Modal.Open>
                 </>
@@ -92,8 +101,11 @@ function TaskRow({ task, onUpdate, project, currentUser }) {
             </Menus.List>
           </Menus.Menu>
         </Menus>
+        <Modal.Window name={`edit-${task.id}`}>
+          <EditTaskForm task={task} onUpdate={onUpdate} />
+        </Modal.Window>
 
-        <Modal.Window name="delete">
+        <Modal.Window name={`delete-${task.id}`}>
           <ConfirmDelete resourceName="task" onConfirm={handleDelete} />
         </Modal.Window>
       </Modal>

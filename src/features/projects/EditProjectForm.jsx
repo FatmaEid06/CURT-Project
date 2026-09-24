@@ -14,7 +14,6 @@ function EditProjectForm({ project, onCloseModal, onUpdate }) {
   const [error, setError] = useState("");
 
   function toggleMember(userId) {
-    // the owner can never be removed from their own project
     if (userId === project.ownerId) return;
     setMembers((cur) =>
       cur.includes(userId)
@@ -44,14 +43,13 @@ function EditProjectForm({ project, onCloseModal, onUpdate }) {
       );
       setStorageData("projects", updatedProjects);
 
-      // tasks assigned to a removed member become unassigned
       const tasks = getStorageData("tasks", []);
-      const updatedTasks = tasks.map((t) =>
-        t.projectId === project.id &&
-        t.assignedTo &&
-        !members.includes(t.assignedTo)
-          ? { ...t, assignedTo: "" }
-          : t,
+      const updatedTasks = tasks.map((task) =>
+        task.projectId === project.id &&
+        task.assignedTo &&
+        !members.includes(task.assignedTo)
+          ? { ...task, assignedTo: "" }
+          : task,
       );
       setStorageData("tasks", updatedTasks);
 

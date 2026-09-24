@@ -39,3 +39,9 @@ export function seedInitialData() {
     setStorageData("tasks", initialTasks);
   }
 }
+
+export function getAssigneeIds(task) {
+  const value = task?.assignedTo;
+  if (Array.isArray(value)) return value;
+  return value ? [value] : [];
+}

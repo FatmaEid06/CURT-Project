@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getStorageData, setStorageData } from "../../data/helpers";
+import {
+  getAssigneeIds,
+  getStorageData,
+  setStorageData,
+} from "../../data/helpers";
 import Button from "../../ui/Button";
 import toast from "react-hot-toast";
 import Row from "../../ui/Row";
@@ -46,7 +50,10 @@ function TaskDetails() {
     );
   }
 
-  const assignee = users.find((u) => u.id === task.assignedTo);
+  const assigneeNames = users
+    .filter((u) => getAssigneeIds(task).includes(u.id))
+    .map((u) => u.name)
+    .join(", ");
   const isOwner = project?.ownerId === currentUser?.id;
 
   function handleDelete() {
@@ -107,7 +114,7 @@ function TaskDetails() {
         </p>
         <p>
           <span className="font-semibold">Assigned to: </span>
-          {assignee?.name || "Unassigned"}
+          {assigneeNames || "Unassigned"}
         </p>
       </div>
     </div>
