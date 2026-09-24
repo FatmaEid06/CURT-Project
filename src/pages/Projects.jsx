@@ -4,9 +4,13 @@ import ProjectTable from "../features/projects/ProjectTable";
 import Heading from "../ui/Heading";
 import Row from "../ui/Row";
 import { getStorageData } from "../data/helpers";
+// import { useSearchParams } from "react-router-dom";
 
 function Projects() {
   const [projects, setProjects] = useState([]);
+  // const [searchParams] = useSearchParams();
+  // const searchQuery = (searchParams.get("search") || "").trim().toLowerCase();
+
   function loadProjects() {
     setProjects(getStorageData("projects", []));
   }
@@ -14,6 +18,10 @@ function Projects() {
   useEffect(() => {
     loadProjects();
   }, []);
+
+  // const filteredProjects = projects.filter((project) =>
+  //   project.name.toLowerCase().includes(searchQuery),
+  // );
   return (
     <>
       <Row type="horizontal">

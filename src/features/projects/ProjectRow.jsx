@@ -5,10 +5,14 @@ import Modal from "../../ui/Modal";
 import { useNavigate } from "react-router-dom";
 import ConfirmDelete from "../../ui/ConfirmDelete";
 import toast from "react-hot-toast";
+import EditProjectForm from "./EditProjectForm";
 
 function ProjectRow({ project, onUpdate }) {
   const users = getStorageData("users", []);
+  const currentUser = getStorageData("currentUser", null);
   const owner = users.find((user) => user.id === project.ownerId);
+  const isOwner = currentUser?.id === project.ownerId;
+
   const navigate = useNavigate();
   function handleDelete() {
     try {
@@ -48,15 +52,22 @@ function ProjectRow({ project, onUpdate }) {
               >
                 See details
               </Menus.Button>
-              <Modal.Open opens={`edit-${project.id}`}>
-                <Menus.Button icon={<HiPencil />}>Edit</Menus.Button>
-              </Modal.Open>
-              <Modal.Open opens={`delete-${project.id}`}>
-                <Menus.Button icon={<HiTrash />}>Delete</Menus.Button>
-              </Modal.Open>
+              {isOwner && (
+                <>
+                  <Modal.Open opens={`edit-${project.id}`}>
+                    <Menus.Button icon={<HiPencil />}>Edit</Menus.Button>
+                  </Modal.Open>
+                  <Modal.Open opens={`delete-${project.id}`}>
+                    <Menus.Button icon={<HiTrash />}>Delete</Menus.Button>
+                  </Modal.Open>
+                </>
+              )}
             </Menus.List>
           </Menus.Menu>
         </Menus>
+        <Modal.Window name={`edit-${project.id}`}>
+          <EditProjectForm project={project} onUpdate={onUpdate} />
+        </Modal.Window>
 
         <Modal.Window name={`delete-${project.id}`}>
           <ConfirmDelete resourceName="project" onConfirm={handleDelete} />
