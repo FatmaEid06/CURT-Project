@@ -23,10 +23,10 @@ function Tasks() {
     id: "u1",
   };
   const currentStatus = searchParams.get("status") || "all";
+  const currentPriority = searchParams.get("priority") || "all";
+  const searchQuery = (searchParams.get("search") || "").trim().toLowerCase();
 
-  const currentTitle = searchParams.get("status");
-
-  const heading = title[currentTitle] || "All tasks";
+  const heading = title[currentStatus] || "All tasks";
 
   function loadData() {
     setTasks(getStorageData("tasks", []));
@@ -36,10 +36,12 @@ function Tasks() {
     loadData();
   }, []);
 
-  const filterTasks =
-    currentStatus != "all"
-      ? tasks.filter((task) => task.status === currentStatus)
-      : tasks;
+  const filterTasks = tasks.filter(
+    (task) =>
+      (currentStatus === "all" || task.status === currentStatus) &&
+      (currentPriority === "all" || task.priority === currentPriority) &&
+      (!searchQuery || task.title.toLowerCase().includes(searchQuery)),
+  );
   return (
     <div className="flex flex-col gap-[3.2rem]">
       <Row type="horizontal">
