@@ -4,12 +4,13 @@ import FormRow from "../../ui/FormRow";
 import Button from "../../ui/Button";
 import { getStorageData, setStorageData } from "../../data/helpers";
 import toast from "react-hot-toast";
+import SpinnerMini from "../../ui/SpinnerMini";
 
 function CreateProjectForm({ onCloseModal, onUpdate }) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
-
+  const [isLoading, setIsLoading] = useState(false);
   const currentUser = JSON.parse(localStorage.getItem("currentUser")) || {
     id: "u1",
   };
@@ -20,26 +21,30 @@ function CreateProjectForm({ onCloseModal, onUpdate }) {
       setError("Project name is required");
       return;
     }
-    try {
-      const projects = getStorageData("projects", []);
-      const newProject = {
-        id: `p-${Date.now()}`,
-        name: name.trim(),
-        description: description.trim(),
-        ownerId: currentUser.id,
-        members: [currentUser.id],
-      };
+    setIsLoading(true);
 
-      setStorageData("projects", [...projects, newProject]);
-      toast.success("Project added successfully");
+    setTimeout(() => {
+      try {
+        const projects = getStorageData("projects", []);
+        const newProject = {
+          id: `p-${Date.now()}`,
+          name: name.trim(),
+          description: description.trim(),
+          ownerId: currentUser.id,
+          members: [currentUser.id],
+        };
 
-      onUpdate?.();
-      onCloseModal?.();
-      if (onCloseModal) onCloseModal();
-    } catch (err) {
-      toast.error("Failed to dd the project");
-      console.log(err);
-    }
+        setStorageData("projects", [...projects, newProject]);
+        toast.success("Project added successfully");
+        onUpdate?.();
+        onCloseModal?.();
+      } catch (err) {
+        toast.error("Failed to add the project");
+        console.log(err);
+      } finally {
+        setIsLoading(false);
+      }
+    }, 500);
   }
 
   return (
@@ -72,7 +77,7 @@ function CreateProjectForm({ onCloseModal, onUpdate }) {
           Cancel
         </Button>
         <Button variant="primary" type="submit">
-          Create Project
+          {isLoading ? <SpinnerMini /> : "Create Project"}
         </Button>
       </FormRow>
     </Form>

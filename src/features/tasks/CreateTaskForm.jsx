@@ -5,6 +5,7 @@ import Button from "../../ui/Button";
 import Select from "../../ui/Select";
 import { getStorageData, setStorageData } from "../../data/helpers";
 import toast from "react-hot-toast";
+import SpinnerMini from "../../ui/SpinnerMini";
 
 function CreateTaskForm({ onCloseModal, defaultProjectId = "", onUpdate }) {
   const projects = getStorageData("projects", []);
@@ -19,6 +20,7 @@ function CreateTaskForm({ onCloseModal, defaultProjectId = "", onUpdate }) {
   const [status, setStatus] = useState("to-do");
   const [assignedTo, setAssignedTo] = useState(users[0]?.id ?? "");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const selectedProject = projects.find((p) => p.id === projectId);
   const assigneeOptions = users.filter((u) =>
@@ -39,27 +41,31 @@ function CreateTaskForm({ onCloseModal, defaultProjectId = "", onUpdate }) {
       setError("Task title and project are required.");
       return;
     }
+    setIsLoading(true);
+    setTimeout(() => {
+      try {
+        const tasks = getStorageData("tasks", []);
+        const newTask = {
+          id: `t-${Date.now()}`,
+          projectId,
+          title: title.trim(),
+          description: description.trim(),
+          status,
+          priority,
+          assignedTo,
+        };
 
-    try {
-      const tasks = getStorageData("tasks", []);
-      const newTask = {
-        id: `t-${Date.now()}`,
-        projectId,
-        title: title.trim(),
-        description: description.trim(),
-        status,
-        priority,
-        assignedTo,
-      };
-
-      setStorageData("tasks", [...tasks, newTask]);
-      toast.success("Task added successfully");
-      onUpdate?.();
-      if (onCloseModal) onCloseModal();
-    } catch (err) {
-      toast.error("Task can'tbe added");
-      console.log(err);
-    }
+        setStorageData("tasks", [...tasks, newTask]);
+        toast.success("Task added successfully");
+        onUpdate?.();
+        onCloseModal?.();
+      } catch (err) {
+        toast.error("Task can't be added");
+        console.log(err);
+      } finally {
+        setIsLoading(false);
+      }
+    }, 500);
   }
 
   return (
@@ -149,7 +155,7 @@ function CreateTaskForm({ onCloseModal, defaultProjectId = "", onUpdate }) {
           Cancel
         </Button>
         <Button variant="primary" type="submit">
-          Save Task
+          {isLoading ? <SpinnerMini /> : "Save Task"}
         </Button>
       </FormRow>
     </Form>

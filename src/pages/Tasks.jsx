@@ -6,6 +6,7 @@ import AddTask from "../features/tasks/AddTask";
 import { useEffect, useState } from "react";
 import { getStorageData } from "../data/helpers";
 import TaskTable from "../features/tasks/TaskTable";
+import Spinner from "../ui/Spinner";
 
 const title = {
   all: "All tasks",
@@ -16,6 +17,7 @@ const title = {
 
 function Tasks() {
   const [searchParams] = useSearchParams();
+  const [isLoading, setIsLoading] = useState(true);
   const [tasks, setTasks] = useState([]);
   const [projects, setProjects] = useState([]);
 
@@ -36,6 +38,12 @@ function Tasks() {
     loadData();
   }, []);
 
+  useEffect(() => {
+    setIsLoading(true);
+    const timer = setTimeout(() => setIsLoading(false), 400);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
   const filterTasks = tasks.filter(
     (task) =>
       (currentStatus === "all" || task.status === currentStatus) &&
@@ -53,12 +61,16 @@ function Tasks() {
         <AddTask onUpdate={loadData} />
       </Row>
 
-      <TaskTable
-        tasks={filterTasks}
-        projects={projects}
-        currentUser={currentUser}
-        onUpdate={loadData}
-      />
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <TaskTable
+          tasks={filterTasks}
+          projects={projects}
+          currentUser={currentUser}
+          onUpdate={loadData}
+        />
+      )}
     </div>
   );
 }

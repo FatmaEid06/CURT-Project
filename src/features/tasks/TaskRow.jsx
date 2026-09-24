@@ -10,6 +10,7 @@ import { HiCheckCircle, HiEye, HiPencil, HiTrash } from "react-icons/hi2";
 import { useNavigate } from "react-router-dom";
 import ConfirmDelete from "../../ui/ConfirmDelete";
 import EditTaskForm from "./EditTaskForm";
+import Tag from "../../ui/Tag";
 
 function TaskRow({ task, onUpdate, project, currentUser }) {
   const users = getStorageData("users", []);
@@ -58,12 +59,8 @@ function TaskRow({ task, onUpdate, project, currentUser }) {
       <span className="font-semibold text-[var(--color-grey-900)]">
         {task.title}
       </span>
-      <span className="text-[var(--color-grey-600)] capitalize">
-        {task.status}
-      </span>
-      <span className="text-[var(--color-grey-600)] capitalize">
-        {task.priority}
-      </span>
+      <Tag type="status" value={task.status} />
+      <Tag type="priority" value={task.priority} />
       <span className="text-[var(--color-grey-600)]">
         {assigneeNames || "Unassigned"}
       </span>

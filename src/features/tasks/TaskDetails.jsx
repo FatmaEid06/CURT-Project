@@ -11,9 +11,13 @@ import Row from "../../ui/Row";
 import Heading from "../../ui/Heading";
 import Modal from "../../ui/Modal";
 import ConfirmDelete from "../../ui/ConfirmDelete";
+import Tag from "../../ui/Tag";
+import Spinner from "../../ui/Spinner";
 
 function TaskDetails() {
   const { taskId } = useParams();
+  const [isLoading, setIsLoading] = useState(true);
+
   const navigate = useNavigate();
   const [task, setTask] = useState(null);
   const [project, setProject] = useState(null);
@@ -34,8 +38,11 @@ function TaskDetails() {
 
   useEffect(() => {
     loadData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const timer = setTimeout(() => setIsLoading(false), 400);
+    return () => clearTimeout(timer);
   }, [taskId]);
+
+  if (isLoading) return <Spinner />;
 
   if (!task) {
     return (
@@ -104,13 +111,13 @@ function TaskDetails() {
           <span className="font-semibold">Project: </span>
           {project?.name || "Unknown"}
         </p>
-        <p className="capitalize">
+        <p className="flex items-center gap-[0.8rem]">
           <span className="font-semibold">Priority: </span>
-          {task.priority}
+          <Tag type="priority" value={task.priority} />
         </p>
-        <p className="capitalize">
+        <p className="flex items-center gap-[0.8rem]">
           <span className="font-semibold">Status: </span>
-          {task.status}
+          <Tag type="status" value={task.status} />
         </p>
         <p>
           <span className="font-semibold">Assigned to: </span>

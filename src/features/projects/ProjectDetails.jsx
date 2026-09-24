@@ -8,9 +8,11 @@ import Heading from "../../ui/Heading";
 import Modal from "../../ui/Modal";
 import ConfirmDelete from "../../ui/ConfirmDelete";
 import TaskTable from "../tasks/TaskTable";
+import Spinner from "../../ui/Spinner";
 
 function ProjectDetails() {
   const { projectId } = useParams();
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const [project, setProject] = useState(null);
   const [tasks, setTasks] = useState([]);
@@ -29,8 +31,11 @@ function ProjectDetails() {
 
   useEffect(() => {
     loadData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const timer = setTimeout(() => setIsLoading(false), 400);
+    return () => clearTimeout(timer);
   }, [projectId]);
+
+  if (isLoading) return <Spinner />;
 
   if (!project) {
     return (

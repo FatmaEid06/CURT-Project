@@ -10,14 +10,15 @@ import Profile from "./pages/Profile";
 import ProtectedRoute from "./ui/ProtectedRoute";
 import ProjectDetails from "./features/projects/ProjectDetails";
 import TaskDetails from "./features/tasks/TaskDetails";
-import { useEffect } from "react";
 import { seedInitialData } from "./data/helpers";
 import { Toaster } from "react-hot-toast";
-function App() {
-  useEffect(() => {
-    seedInitialData();
-  }, []);
 
+if (!sessionStorage.getItem("sessionStarted")) {
+  localStorage.removeItem("currentUser");
+  sessionStorage.setItem("sessionStarted", "true");
+}
+function App() {
+  seedInitialData();
   return (
     <>
       <BrowserRouter>

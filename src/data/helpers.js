@@ -26,7 +26,6 @@ export function seedInitialData() {
   const existingUsers = getStorageData("users", null);
   if (!existingUsers || existingUsers.length === 0) {
     setStorageData("users", initialUsers);
-    setStorageData("currentUser", initialUsers[0]);
   }
 
   const existingProjects = getStorageData("projects", null);
