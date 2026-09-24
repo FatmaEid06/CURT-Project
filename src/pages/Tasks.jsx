@@ -8,11 +8,16 @@ import { getStorageData } from "../data/helpers";
 import TaskTable from "../features/tasks/TaskTable";
 import Spinner from "../ui/Spinner";
 
-const title = {
-  all: "All tasks",
-  "to-do": "To Do Tasks",
-  "in-progress": "In progress Tasks",
-  done: "Done Tasks",
+const statusLabels = {
+  "to-do": "To Do",
+  "in-progress": "In Progress",
+  done: "Done",
+};
+
+const priorityLabels = {
+  low: "Low",
+  medium: "Medium",
+  high: "High",
 };
 
 function Tasks() {
@@ -33,7 +38,17 @@ function Tasks() {
   const currentPriority = searchParams.get("priority") || "all";
   const searchQuery = (searchParams.get("search") || "").trim().toLowerCase();
 
-  const heading = title[currentStatus] || "All tasks";
+  let heading = "All Tasks";
+  const isStatusAll = currentStatus === "all";
+  const isPriorityAll = currentPriority === "all";
+
+  if (!isStatusAll && !isPriorityAll) {
+    heading = `${statusLabels[currentStatus]} & ${priorityLabels[currentPriority]} Tasks`;
+  } else if (!isStatusAll) {
+    heading = `${statusLabels[currentStatus]} Tasks`;
+  } else if (!isPriorityAll) {
+    heading = `${priorityLabels[currentPriority]} Priority Tasks`;
+  }
 
   function loadData() {
     setTasks(getStorageData("tasks", []));
