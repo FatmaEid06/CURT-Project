@@ -8,6 +8,8 @@ import AppLayout from "./ui/AppLayout";
 import PageNotFound from "./pages/PageNotFound";
 import Profile from "./pages/Profile";
 import ProtectedRoute from "./ui/ProtectedRoute";
+import ProjectDetails from "./features/projects/ProjectDetails";
+import TaskDetails from "./features/tasks/TaskDetails";
 import { useEffect } from "react";
 import { seedInitialData } from "./data/helpers";
 import { Toaster } from "react-hot-toast";
@@ -26,7 +28,9 @@ function App() {
               <Route index element={<Navigate replace to="home" />} />
               <Route path="home" element={<Home />} />
               <Route path="projects" element={<Projects />} />
+              <Route path="projects/:projectId" element={<ProjectDetails />} />
               <Route path="tasks" element={<Tasks />} />
+              <Route path="tasks/:taskId" element={<TaskDetails />} />
               <Route path="profile" element={<Profile />} />
               <Route path="logout" element={<Logout />} />
             </Route>

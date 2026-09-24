@@ -75,7 +75,7 @@ function TaskRow({ task, onUpdate, project, currentUser }) {
 
               <Menus.Button
                 icon={<HiEye />}
-                onClick={() => navigate(`tasks/${task.id}`)}
+                onClick={() => navigate(`/tasks/${task.id}`)}
               >
                 See details
               </Menus.Button>

@@ -7,8 +7,8 @@ import SpinnerMini from "../ui/SpinnerMini";
 
 function Login() {
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("ahmed@curt.com");
+  const [password, setPassword] = useState("123");
   const [isSignup, setIsSignup] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
