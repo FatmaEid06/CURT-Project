@@ -24,6 +24,11 @@ function Tasks() {
   const currentUser = JSON.parse(localStorage.getItem("currentUser")) || {
     id: "u1",
   };
+
+  const currentPage = !searchParams.get("page")
+    ? 1
+    : Number(searchParams.get("page"));
+
   const currentStatus = searchParams.get("status") || "all";
   const currentPriority = searchParams.get("priority") || "all";
   const searchQuery = (searchParams.get("search") || "").trim().toLowerCase();
@@ -50,9 +55,15 @@ function Tasks() {
       (currentPriority === "all" || task.priority === currentPriority) &&
       (!searchQuery || task.title.toLowerCase().includes(searchQuery)),
   );
+
+  const paginatedTasks = filterTasks.slice(
+    (currentPage - 1) * 5,
+    currentPage * 5,
+  );
+
   return (
-    <div className="flex flex-col gap-[3.2rem]">
-      <Row type="horizontal">
+    <div className="flex flex-col gap-[2rem]">
+      <Row type="vertical">
         <Heading as="h1">{heading}</Heading>
         <TaskTableOperations />
       </Row>
@@ -65,10 +76,11 @@ function Tasks() {
         <Spinner />
       ) : (
         <TaskTable
-          tasks={filterTasks}
+          tasks={paginatedTasks}
           projects={projects}
           currentUser={currentUser}
           onUpdate={loadData}
+          count={filterTasks.length}
         />
       )}
     </div>

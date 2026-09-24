@@ -15,7 +15,7 @@ function Header() {
   }, []);
 
   return (
-    <header className="bg-[var(--color-grey-0)] py-[1.2rem] px-[4.8rem] border-b border-[var(--color-grey-100)] flex gap-[2.4rem] items-center justify-end">
+    <header className="col-start-2 bg-[var(--color-grey-0)] py-[1.2rem] px-[1.6rem] md:px-[4.8rem] border-b border-[var(--color-grey-100)] flex gap-[2.4rem] items-center justify-end">
       <p> {currentUser?.name}👋</p>
     </header>
   );

@@ -55,7 +55,7 @@ function TaskRow({ task, onUpdate, project, currentUser }) {
   }
 
   return (
-    <div className="grid grid-cols-[1.2fr_1fr_1fr_1fr_auto] gap-[2.4rem] items-center py-[1.6rem] px-[2.4rem] bg-[var(--color-grey-0)] border-b border-[var(--color-grey-100)] text-[1.4rem]">
+    <div className="grid grid-cols-[1.2fr_1fr_1fr_1fr_auto] gap-[2.4rem] items-center py-[2.6rem] px-[2.4rem] bg-[var(--color-grey-0)] border-b border-[var(--color-grey-100)] text-[1.4rem]">
       <span className="font-semibold text-[var(--color-grey-900)]">
         {task.title}
       </span>

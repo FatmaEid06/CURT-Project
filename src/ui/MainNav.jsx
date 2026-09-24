@@ -3,61 +3,49 @@ import { FaHome } from "react-icons/fa";
 import { GoProjectRoadmap } from "react-icons/go";
 import { MdAddTask } from "react-icons/md";
 import { NavLink } from "react-router-dom";
+
+const links = [
+  { to: "/home", label: "Home", Icon: FaHome },
+  { to: "/projects", label: "Projects", Icon: GoProjectRoadmap },
+  { to: "/tasks", label: "Tasks", Icon: MdAddTask },
+  { to: "/profile", label: "Profile", Icon: CgProfile },
+];
+
 const linkStyle = ({ isActive }) =>
-  `flex items-center gap-[1.2rem] text-[1.6rem] font-medium py-[1.2rem] px-[2.4rem] transition-all duration-300 ${
-    isActive
-      ? "text-[var(--color-grey-800)] bg-[var(--color-grey-50)] rounded-[var(--border-radius-sm)]"
-      : "text-[var(--color-grey-600)] hover:text-[var(--color-grey-800)] hover:bg-[var(--color-grey-50)] hover:rounded-[var(--border-radius-sm)]"
-  }`;
+  `flex items-center justify-center gap-[1rem] py-[1rem] px-[0.6rem]
+   md:justify-start md:py-[1.5rem] md:px-[1.2rem]
+   text-[1.8rem] font-medium transition-all duration-300 ${
+     isActive
+       ? "text-[var(--color-grey-800)] bg-[var(--color-grey-50)] rounded-[var(--border-radius-sm)]"
+       : "text-[var(--color-grey-600)] hover:text-[var(--color-grey-800)] hover:bg-[var(--color-grey-50)] hover:rounded-[var(--border-radius-sm)]"
+   }`;
 
 const iconStyle = (isActive) =>
-  `w-[2.4rem] h-[2.4rem] transition-all duration-300 ${
+  `w-[2.4rem] h-[2.4rem] shrink-0 transition-all duration-300 ${
     isActive ? "text-[var(--color-brand-600)]" : "text-[var(--color-grey-400)]"
   }`;
+
 function MainNav() {
   return (
     <nav>
       <ul className="flex flex-col gap-[0.8rem]">
-        <li>
-          <NavLink to="/home" className={linkStyle}>
-            {({ isActive }) => (
-              <>
-                <FaHome className={iconStyle(isActive)} />
-                <span>Home</span>
-              </>
-            )}
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to="/projects" className={linkStyle}>
-            {({ isActive }) => (
-              <>
-                <GoProjectRoadmap className={iconStyle(isActive)} />
-                <span>Projects</span>
-              </>
-            )}
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to="/tasks" className={linkStyle}>
-            {({ isActive }) => (
-              <>
-                <MdAddTask className={iconStyle(isActive)} />
-                <span>Tasks</span>
-              </>
-            )}
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to="/profile" className={linkStyle}>
-            {({ isActive }) => (
-              <>
-                <CgProfile className={iconStyle(isActive)} />
-                <span>Profile</span>
-              </>
-            )}
-          </NavLink>
-        </li>
+        {links.map(({ to, label, Icon }) => (
+          <li key={to}>
+            <NavLink
+              to={to}
+              className={linkStyle}
+              title={label}
+              aria-label={label}
+            >
+              {({ isActive }) => (
+                <>
+                  <Icon className={iconStyle(isActive)} />
+                  <span className="hidden md:inline">{label}</span>
+                </>
+              )}
+            </NavLink>
+          </li>
+        ))}
       </ul>
     </nav>
   );

@@ -1,6 +1,7 @@
+import Pagination from "../../ui/Pagination";
 import ProjectRow from "./ProjectRow";
 
-function ProjectTable({ projects = [], onUpdate }) {
+function ProjectTable({ projects = [], onUpdate, count }) {
   if (projects.length === 0) {
     return (
       <p className="text-[1.6rem] text-center text-[var(--color-grey-500)] py-[3.2rem]">
@@ -21,6 +22,9 @@ function ProjectTable({ projects = [], onUpdate }) {
         {projects.map((project) => (
           <ProjectRow key={project.id} project={project} onUpdate={onUpdate} />
         ))}
+      </div>
+      <div className="p-[2.2rem_2.4rem] bg-[var(--color-grey-50)] border-t border-[var(--color-grey-100)] flex justify-center">
+        <Pagination count={count} />
       </div>
     </div>
   );

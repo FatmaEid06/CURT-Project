@@ -27,7 +27,7 @@ function Tag({ type, value }) {
 
   return (
     <span
-      className={`inline-block w-fit rounded-full py-[0.4rem] px-[1.2rem] text-[1.2rem] font-semibold whitespace-nowrap ${color}`}
+      className={`inline-flex items-center justify-center rounded-full py-[0.25rem] px-[0.8rem] text-[0.9rem] md:py-[0.4rem] md:px-[1.2rem] md:text-[1.2rem] font-semibold whitespace-nowrap ${color}`}
     >
       {labels[value] || value}
     </span>

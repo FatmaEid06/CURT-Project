@@ -1,9 +1,16 @@
+import Pagination from "../../ui/Pagination";
 import TaskRow from "./TaskRow";
 
-function TaskTable({ tasks = [], projects = [], currentUser, onUpdate }) {
+function TaskTable({
+  tasks = [],
+  projects = [],
+  currentUser,
+  onUpdate,
+  count,
+}) {
   if (!tasks.length)
     return (
-      <p className="text-[1.6rem] text-center text-[var(--color-grey-500)] py-[3.2rem]">
+      <p className="text-[.6rem] text-center text-[var(--color-grey-500)] py-[3.2rem]">
         No tasks found
       </p>
     );
@@ -12,7 +19,7 @@ function TaskTable({ tasks = [], projects = [], currentUser, onUpdate }) {
       <div className="grid grid-cols-[1.2fr_1fr_1fr_1fr_auto] gap-[2.4rem] items-center py-[1.6rem] px-[2.4rem] bg-[var(--color-grey-50)] border-b border-[var(--color-grey-100)] font-semibold text-[1.4rem] text-[var(--color-grey-600)] uppercase tracking-[0.4px]">
         <span>Title</span>
         <span>Status</span>
-        <span>Proirity</span>
+        <span>Priority</span>
         <span>Assignee</span>
         <span></span>
       </div>
@@ -32,6 +39,9 @@ function TaskTable({ tasks = [], projects = [], currentUser, onUpdate }) {
             />
           );
         })}
+      </div>
+      <div className="p-[2.2rem_2.4rem] bg-[var(--color-grey-50)] border-t border-[var(--color-grey-100)] flex justify-center">
+        <Pagination count={count} />
       </div>
     </div>
   );
